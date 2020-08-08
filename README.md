@@ -9,4 +9,6 @@ to Excel for a workable solution.
 
 Market consistency tests are implicit seeing that a Monte Carlo algorithm has already been implemented.
 
-Project at its initial stages. I will continue to enrich functionalities with time.
+Project at its initial stages. I will continue to enrich functionalities with time and keep versions.
+
+Please feel free to add on to the project if interested! :)
