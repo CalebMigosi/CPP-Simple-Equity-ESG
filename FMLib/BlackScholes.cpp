@@ -36,27 +36,27 @@ double BlackScholes::putPrice(double strike, double expiry) const{
 
 // 		PRICE PATH GENERATOR
 //-------------------------------------
-std::vector<double> BlackScholes::RNPricePathGenerator(double expiry, int timeStepsPerYear) const{
+Matrix BlackScholes::RNPricePathGenerator(double expiry, int timeStepsPerYear) const{
 	double totalSteps =  expiry * (double) timeStepsPerYear;
 	double dt = 1.0 /(double) timeStepsPerYear;
 	
 	// Resulting vector
-	vector<double> pricePath(totalSteps+1);
+	Matrix pricePath(totalSteps+1);
 	
 	// To be used to scale Gaussians to make browniens
 	double timeVolatility =  volatility * sqrt(dt);
 	
 	// Gaussians to be used multiplied by volatility
-	vector<double> gaussians = randGaussianVector(totalSteps);
+	Matrix gaussians = randGaussianVector(totalSteps);
 	
 	//Initialize price path
-	pricePath[0] = stockPrice;
+	pricePath(0) = stockPrice;
 	
 	for(int i = 1; i < totalSteps+1; i++){
 	
 	// Use Euler discretization scheme
-		double delta = exp(((interestRate - 0.5 * square(volatility)) * dt) + timeVolatility * gaussians[i-1]);
-		pricePath[i] = pricePath[i -1] * delta;
+		double delta = exp(((interestRate - 0.5 * square(volatility)) * dt) + timeVolatility * gaussians(i-1));
+		pricePath(i) = pricePath(i -1) * delta;
 		}
 		
 	return pricePath;

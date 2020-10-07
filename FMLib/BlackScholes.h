@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Model.h"
+#include "matlib.h"
 
 class BlackScholes: public Model{
 public:
@@ -7,7 +8,7 @@ public:
 	double putPrice(double strike, double expiry) const;
 	
 	// To be used in Monte Carlo Pricing
-	std::vector<double> RNPricePathGenerator(double expiry,int timeStepsPerYear) const;
+	Matrix RNPricePathGenerator(double expiry,int timeStepsPerYear) const;
 	
 	// Market Data
 	double stockPrice;

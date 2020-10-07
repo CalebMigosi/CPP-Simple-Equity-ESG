@@ -1,5 +1,5 @@
 #pragma once
-
+#include <iostream>
 #include <cmath>
 #include <vector>
 #include <string>
@@ -11,3 +11,5 @@
 #include <functional> // function
 #include <assert.h>		//assert
 #include <string.h>		//memset
+
+
