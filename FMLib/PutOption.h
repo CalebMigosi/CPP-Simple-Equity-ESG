@@ -1,16 +1,20 @@
-#pragma once
-#include "BlackScholes.h"
+#include "stdafx.h"
+#include "Model.h"
+#include "Security.h"
 
-class PutOption
-{
+//INTERFACE
+
+class PutOption : public Security{
 public:
+	double price(std::shared_ptr<Model> model);
+	
+	//Access to data: Inline functions
+	double getExpiry() const{ return expiry;}	
+	double getStrike() const{ return strike;}
+	
+	void setExpiry(double inputExpiry){expiry = inputExpiry;}
+	void setStrike(double inputStrike){strike = inputStrike;}
+	
 	double strike;
 	double expiry;
-
-	//Constructor
-	PutOption();
-
-	// Declare member functions
-	double payoff(double stockAtMaturity) const;
-	double price(const BlackScholes& bsm) const;
 };

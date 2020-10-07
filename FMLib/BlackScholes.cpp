@@ -1,28 +1,63 @@
-#include "BlackScholes.h"
 #include "stdafx.h"
+#include <iostream>
+#include "BlackScholes.h"
 #include "matlib.h"
+
 using namespace std;
 
-vector<double> BlackScholes::pricePathGenerator(double toDate, int timeStepsPerYear, double drift, double spotPrice) const {
-	int n = (int)(toDate - date) * timeStepsPerYear;
-	double dt = 1 / (double) timeStepsPerYear; //Dt in discretization scheme
 
-	// Generate vector of Gaussians
-	vector<double> gaussians = randgaussianBoxMuller(n);
-
-	// Container for price path
-	vector<double> pricePath(n);
-	pricePath[0] = spotPrice;
-	double driftImpact = (drift - 0.5 * volatility * volatility) * dt;
-
-	// Loop through the 
-	for (int i = 1; i < n; i++) {
-		pricePath[i] = pricePath[i-1] * exp(driftImpact + volatility * sqrt(dt) * gaussians[i - 1]);
-	}
-
-	return pricePath;
+// 			CALL PRICE
+//-------------------------------------
+double BlackScholes::callPrice(double strike, double expiry) const{
+	double logMoneyness = log(stockPrice/strike);
+	double varianceTime = square(volatility * expiry);
+	
+	double d1 = (logMoneyness + interestRate * expiry + varianceTime)/sqrt(varianceTime);
+	double d2 = d1 - sqrt(varianceTime);
+	
+	double price =  normCDF(d1) * stockPrice - normCDF(d2) * strike *exp( - interestRate * expiry);
+	return price;
 }
 
-vector<double> BlackScholes::riskNeutralPathGenerator(double toDate, int timeStepsPerYear, double spotPrice) const{
-	return pricePathGenerator(toDate, timeStepsPerYear, riskFreeRate, spotPrice);
+// 			PUT PRICE
+//-------------------------------------
+double BlackScholes::putPrice(double strike, double expiry) const{
+		double logMoneyness = log(stockPrice/strike);
+	double varianceTime = square(volatility * expiry);
+	
+	double d1 = (logMoneyness + interestRate * expiry + varianceTime)/sqrt(varianceTime);
+	double d2 = d1 - sqrt(varianceTime);
+	
+	double price =  normCDF(-d2) * strike *exp( - interestRate * expiry) - normCDF(-d1) * stockPrice;
+	
+	return price;
+}
+
+
+// 		PRICE PATH GENERATOR
+//-------------------------------------
+std::vector<double> BlackScholes::RNPricePathGenerator(double expiry, int timeStepsPerYear) const{
+	double totalSteps =  expiry * (double) timeStepsPerYear;
+	double dt = 1.0 /(double) timeStepsPerYear;
+	
+	// Resulting vector
+	vector<double> pricePath(totalSteps+1);
+	
+	// To be used to scale Gaussians to make browniens
+	double timeVolatility =  volatility * sqrt(dt);
+	
+	// Gaussians to be used multiplied by volatility
+	vector<double> gaussians = randGaussianVector(totalSteps);
+	
+	//Initialize price path
+	pricePath[0] = stockPrice;
+	
+	for(int i = 1; i < totalSteps+1; i++){
+	
+	// Use Euler discretization scheme
+		double delta = exp(((interestRate - 0.5 * square(volatility)) * dt) + timeVolatility * gaussians[i-1]);
+		pricePath[i] = pricePath[i -1] * delta;
+		}
+		
+	return pricePath;
 }

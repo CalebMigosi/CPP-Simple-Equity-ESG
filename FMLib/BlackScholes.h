@@ -1,19 +1,19 @@
-#pragma once
 #include "stdafx.h"
+#include "Model.h"
 
-class BlackScholes {
+class BlackScholes: public Model{
 public:
+	double callPrice(double strike, double expiry) const;
+	double putPrice(double strike, double expiry) const;
+	
+	// To be used in Monte Carlo Pricing
+	std::vector<double> RNPricePathGenerator(double expiry,int timeStepsPerYear) const;
+	
+	// Market Data
 	double stockPrice;
+	double interestRate;
+	
+	// Model Parameters
 	double volatility;
-	double date;
-	double riskFreeRate;
 
-	std::vector<double> riskNeutralPathGenerator(double toDate, int timeStepsPerYear, double spotPrice = 1) const;
-
-private:
-	std::vector<double> pricePathGenerator(double toDate,
-											int timeStepsPerYear,
-											double drift = 0,
-											double spotPrice = 1) const;
 };
-
