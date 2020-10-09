@@ -31,8 +31,8 @@ public:
 	// Set
 	void set(int i, int j , double value){
 		data[offset(i, j)] = value;
-	} 
-	
+	} 	
+		
 	// 3) begin functions to obtain a pointer to the first element
 	double* begin(){
 		return data;
