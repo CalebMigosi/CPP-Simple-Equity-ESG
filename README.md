@@ -4,13 +4,15 @@ to Excel for a workable solution.
 
 Note that I'm using Windows Visual Studio 2019.
 
-## Important missing parts:
-1) Calibration
-2) Validation Tests (martingale tests)
-3) Greeks
+## Update
+Much of the addition has been in:
 
-Market consistency tests are implicit seeing that a Monte Carlo algorithm has already been implemented.
+1) Creating a matrix class for linear algebra operations
+2) Construction of Model and Security Interfaces allowing for pricing different instruments under different models
+3) Projection: Simple Monte Carlo price generator
 
-Project at its initial stages. I will continue to enrich functionalities with time and keep versions.
-
+To be done:
+1) Finalize inversion of the Jacobian: (Minimization algorithm)
+2) Addition of a second Model (Heston preferably)
+3) Addition of more complex assets (Enrich the number of assets)
 Please feel free to add on to the project if interested! :)
