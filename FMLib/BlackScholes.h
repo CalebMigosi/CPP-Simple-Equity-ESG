@@ -9,7 +9,7 @@ public:
 	double putPrice(double strike, double expiry) const;
 	
 	// To be used in Monte Carlo Pricing
-	Matrix RNPricePathGenerator(double expiry,int timeStepsPerYear) const;
+	Eigen::VectorXd RNPricePathGenerator(double expiry,int timeStepsPerYear) const;
 	
 	// Market Data
 	double stockPrice;

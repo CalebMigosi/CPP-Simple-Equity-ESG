@@ -3,6 +3,7 @@
 #include "matlib.h"
 
 using namespace std;
+using namespace Eigen;
 
 // 64 bit Mersenne Twister
 static 	mt19937_64 generator;
@@ -10,9 +11,9 @@ static 	mt19937_64 generator;
 //				GAUSSIANS
 //------------------------------------------------
 // Generate a vector of gaussian generated random values
-Matrix randGaussianVector(int length){
+VectorXd randGaussianVector(int length){
 	// Length of the vector to be obtained
-	Matrix result(length);
+	VectorXd result(length);
 	
 	// We use the 64 bit Mersenne Twister: For other examples (http://www.cplusplus.com/reference/random/)
 	// This generates the random number i.e. uniforms
@@ -28,6 +29,7 @@ Matrix randGaussianVector(int length){
 	return result; 
 }
 
+
 // Gaussian CDF for any x
 //For more info: https://en.wikipedia.org/wiki/Error_function
 double normCDF(double x){
@@ -40,11 +42,11 @@ double normCDF(double x){
 //------------------------------------------------
 
 // Vector Mean
-double mean(const Matrix& inputVector){
+double mean(const VectorXd& inputVector){
 	double sumTotal = 0.0;
 	
-	int n = inputVector.nRow();
-	
+	int n = inputVector.size();
+
 	for(int i = 0; i < n; i++){
 		sumTotal += inputVector(i);
 	}
@@ -53,8 +55,8 @@ double mean(const Matrix& inputVector){
 }
 
 //Vector std
-double sdev(const Matrix& inputVector){
-	int n = inputVector.nRow();
+double sdev(const VectorXd& inputVector){
+	int n = inputVector.size();
 	
 	double average = mean(inputVector);
 	double sumSquares = 0;
@@ -64,5 +66,4 @@ double sdev(const Matrix& inputVector){
 	}
 	return sqrt(sumSquares/(double) n);
 }
-
 

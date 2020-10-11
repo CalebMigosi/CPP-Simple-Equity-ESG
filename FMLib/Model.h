@@ -1,7 +1,6 @@
 #pragma once
 #include "stdafx.h"
-#include "matlib.h"
-
+#include "optimize.h"
 //INTERFACE
 
 /*
@@ -17,11 +16,8 @@ class Model{
 public:
 	virtual double callPrice(double strike, double expiry) const = 0;
 	virtual double putPrice(double strike, double expiry) const = 0;
-	virtual Matrix RNPricePathGenerator(double expiry, int timeStepsPerYear) const = 0;
-	/* virtual std::vector<double> calibrator(std::vector<double> marketPrices,
-											std::vector<double> strikes,
-											std::vector<double> expiries) = 0;
-	*/
+	virtual Eigen::VectorXd RNPricePathGenerator(double expiry, int timeStepsPerYear) const = 0;
+	/* virtual CalibResult calibrator(const Optimizer& algorithm) = 0;*/
 	virtual ~Model(){};
 };
 

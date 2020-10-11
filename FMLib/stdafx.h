@@ -11,5 +11,5 @@
 #include <functional> // function
 #include <assert.h>		//assert
 #include <string.h>		//memset
-
-
+#include <Eigen/Dense>   // Linear Algebra operations
+#include <time.h>		// Timer function

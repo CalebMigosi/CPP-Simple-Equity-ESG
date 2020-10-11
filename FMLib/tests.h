@@ -4,28 +4,27 @@
 #include "Model.h"
 #include "BlackScholes.h"
 #include "matlib.h"
-#include "matrix.h"
 #include "objectiveFunction.h"
-
+#include "optimize.h"
 
 using namespace std;
+using namespace Eigen;
 
 // Test Functions
-double square2(const Matrix& x);
-Matrix squareM(const Matrix& x);
+double square2(const VectorXd& x);
+VectorXd squareM(const VectorXd& x);
 
 // Test Definitions
-void testMatrixClass();
+void testVectorXdClass();
 void testBlackScholesModel();
 void testObjectiveFunction();
-
 
 
 //========================================
 // 		HELPER FUNCTIONS FOR TESTS
 //========================================
-double square2(const Matrix& x){
-	int rows = x.nRow();
+double square2(const VectorXd& x){
+	int rows = x.rows();
 	double norm2 = 0.0;
 	
 	for (int i = 0; i < rows; i++){
@@ -37,10 +36,10 @@ double square2(const Matrix& x){
 
 
 // Square function
-Matrix squareM(const Matrix& x){
-	int rows = x.nRow();
-	Matrix result(rows);
-	Matrix y = x;
+VectorXd squareM(const VectorXd& x){
+	int rows = x.rows();
+	VectorXd result(rows);
+	VectorXd y = x;
 	
 	for (int i = 0; i < rows; i++){
 		result(i) = (x(i) * y(i));	
@@ -49,35 +48,43 @@ Matrix squareM(const Matrix& x){
 	return result;
 }
 
+
 //----------------------------------
 // 		TEST DEFINITIONS
 //----------------------------------
 
-// Test Matrix Class
-void testMatrixClass(){
+// Test VectorXd Class
+void testVectorXdClass(){
 	
-	// Define the matrix
-	Matrix mat(2, 2);
-	mat.set(1, 1, 100.0);
+	// Define the VectorXd
+	MatrixXd mat(2, 2);
+	mat(1, 1) =  100.0;
 	
-	Matrix mat2(2, 2);
-	mat2.set(1, 1, 100.0);
-	mat2 = mat2 + 1.0;
-	mat = mat + 100.0;
+	MatrixXd mat2(2, 2);
+	mat2(1, 1) = 100.0;
+	mat2 = mat2.array() + 1.0;
+	mat = mat.array() + 100.0;
 	
-	// Matrix multiplication
-	Matrix mat3 = mat * mat2;
+	cout << "First Matrix: \n";
+	cout << mat;
 	
-	// Test for single row as matrix
-	Matrix rowMatrix(10);
+	cout << "\n \n";
+	cout << "Second Matrix: \n";
+	cout << mat2;
+		
+	// VectorXd multiplication
+	MatrixXd mat3 = mat * mat2;
 	
-	// Assigning random numbers to matrix	
-	Matrix test = randGaussianVector(10);
-	int cols = test.nCol();
-	int rows = test.nRow();
+	cout << "\n \n";
+	cout << "Third Matrix: \n";
+	cout << mat3;
 	
-	cout << cols << "\n";
-	cout << test(9)  << "\n";
+	// Test for single row as VectorXd
+	VectorXd rowVectorXd(10);
+	
+	// Assigning random numbers to VectorXd	
+	VectorXd test = randGaussianVector(10);
+
 	double meanTest = mean(test);
 	 
 	meanTest = sdev(test);
@@ -104,22 +111,74 @@ void testBlackScholesModel(){
 	cout << model.putPrice(100.0, 1.0)<<"\n\n";
 	
 	// Test the Price path generator
-	Matrix test1 = model.RNPricePathGenerator(1.0, 12.0);
-	Matrix test2 = model.RNPricePathGenerator(1.0, 12.0);
-	Matrix test3 = model.RNPricePathGenerator(1.0, 12.0);
+	VectorXd test1 = model.RNPricePathGenerator(1.0, 12.0);
+	VectorXd test2 = model.RNPricePathGenerator(1.0, 12.0);
+	VectorXd test3 = model.RNPricePathGenerator(1.0, 12.0);
+	
+	// Print Values
+	cout << "Gaussian Vector1 \n";
+	cout << test1;
+	cout << "\n \n";
+	cout << "Gaussian Vector2 \n";
+	cout << test2;
+	cout << "\n \n";	cout << "Gaussian Vector3 \n";
+	cout << test3;
+	cout << "\n \n";	
 }
 
 
 void testObjectiveFunction(){
 	
-	Matrix input = randGaussianVector(10);
+	VectorXd input = randGaussianVector(10);
 	RealVectFunction testFunc(square2);
-	Matrix derive = testFunc.gradient(input);
-	Matrix hess = testFunc.hessian(input);
+	VectorXd derive = testFunc.gradient(input);
+	MatrixXd hess = testFunc.hessian(input);
+	
+	cout << "Input Vector: \n";
 	cout << input;
+	cout << "\n \n";
+	
+	cout << "Input Vector multiplied by 2: \n";
+	cout << input.array()*2;
+	cout << "\n \n";
+		
+	cout << "Derivative: \n";
 	cout << derive;
+	cout << "\n \n";
+	cout << "Hessian: \n";
 	cout << hess; 
+	cout << "\n \n";
 	
 	ObjectiveFunction testObj(squareM);
-	Matrix jacobSlice = testObj.jacobian(input);
-	cout << jacobSlice;}
+	
+	// Jacobian Test
+	MatrixXd jacobSlice = testObj.jacobian(input);
+	cout << "Jacobian: \n";
+	cout << jacobSlice * testObj(input);
+	cout << "\n \n";
+	
+	// Test for the optimizer
+	CalibResult res;
+	LevMarquardt calibrator;
+	res = calibrator.calibrate(testObj, input);
+	cout << res.initialParam;
+	
+	cout << "\n \n";
+	cout << "Optimal Parameters: \n";
+	cout << res.optimalParam;
+	
+	cout << "\n \n";
+	cout << "SS Error: \n";
+	cout << res.SSE;
+	
+	cout << "\n \n";
+	cout << "Time Elapsed: \n";
+	cout << res.timeElapsed;
+	
+	cout << "\n \n";
+	cout << "Optimization Steps: \n";
+	cout << res.iterations << " iterations \n \n";
+	cout << res.optimizationSteps;
+	}
+	
+

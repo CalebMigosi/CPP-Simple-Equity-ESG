@@ -4,7 +4,7 @@
 #include "matlib.h"
 
 using namespace std;
-
+using namespace Eigen;
 
 // 			CALL PRICE
 //-------------------------------------
@@ -36,18 +36,18 @@ double BlackScholes::putPrice(double strike, double expiry) const{
 
 // 		PRICE PATH GENERATOR
 //-------------------------------------
-Matrix BlackScholes::RNPricePathGenerator(double expiry, int timeStepsPerYear) const{
+VectorXd BlackScholes::RNPricePathGenerator(double expiry, int timeStepsPerYear) const{
 	double totalSteps =  expiry * (double) timeStepsPerYear;
 	double dt = 1.0 /(double) timeStepsPerYear;
 	
 	// Resulting vector
-	Matrix pricePath(totalSteps+1);
+	VectorXd pricePath((int)(totalSteps+1));
 	
 	// To be used to scale Gaussians to make browniens
 	double timeVolatility =  volatility * sqrt(dt);
 	
 	// Gaussians to be used multiplied by volatility
-	Matrix gaussians = randGaussianVector(totalSteps);
+	VectorXd gaussians = randGaussianVector(totalSteps);
 	
 	//Initialize price path
 	pricePath(0) = stockPrice;
