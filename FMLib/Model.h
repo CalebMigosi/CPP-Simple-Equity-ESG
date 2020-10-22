@@ -17,6 +17,10 @@ public:
 	virtual double callPrice(double strike, double expiry) const = 0;
 	virtual double putPrice(double strike, double expiry) const = 0;
 	virtual Eigen::VectorXd RNPricePathGenerator(double expiry, int timeStepsPerYear) const = 0;
+	
+	// For model calibration
+	//virtual Eigen::VectorXd callPriceVect(double strike, double expiry, Eigen::VectorXd params) const = 0;
+	//virtual Eigen::VectorXd putPriceVect(double strike, double expiry, Eigen::VectorXd params) const = 0;
 	/* virtual CalibResult calibrator(const Optimizer& algorithm) = 0;*/
 	virtual ~Model(){};
 };

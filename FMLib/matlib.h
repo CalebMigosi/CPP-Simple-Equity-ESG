@@ -1,6 +1,8 @@
 #pragma once
 #include "stdafx.h"
 
+const double PI  =3.141592653589793238463;
+
 //INLINES
 // Square function
 inline double square(double x) {return x * x;}

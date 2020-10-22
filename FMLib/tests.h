@@ -3,9 +3,11 @@
 #include "CallOption.h"
 #include "Model.h"
 #include "BlackScholes.h"
+#include "Heston.h"
 #include "matlib.h"
 #include "objectiveFunction.h"
 #include "optimize.h"
+#include "Heston.h"
 
 using namespace std;
 using namespace Eigen;
@@ -180,5 +182,14 @@ void testObjectiveFunction(){
 	cout << res.iterations << " iterations \n \n";
 	cout << res.optimizationSteps;
 	}
+
+void testHeston(){
+	Heston model;
+	model.q = 0.0;
+	model.r = 0.03;
+	model.S0 = 100.0;
 	
+	cout << model.callPrice(100.0, 2.0);
+	
+}	
 

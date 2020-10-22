@@ -8,7 +8,8 @@ using namespace Eigen;
 //===============================
 // 				MAIN
 //===============================
-int main(){
+int main(){	
+testHeston();
 //testVectorXdClass();
 //testBlackScholesModel();
 //testObjectiveFunction();
